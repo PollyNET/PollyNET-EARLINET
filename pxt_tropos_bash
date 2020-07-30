@@ -1,0 +1,104 @@
+#!/bin/bash
+
+today=$(date +'%Y_%m_%d')
+#echo "$today"
+
+yesterday=$(date --date="yesterday" +'%Y_%m_%d')
+#echo "$yesterday"
+
+current_year=$(date +'%Y%m')
+#year_month= $(date + '%Y%m')
+#echo "$current_year"
+
+s=8
+string1="today"
+string2="yesterday"
+
+if [ $1 == $string1 ]; then 
+    echo "today"
+    year_month=$current_year
+    day=$today
+    echo $day
+
+elif [ $1 == $string2 ]; then 
+    echo "yesterday"
+    year_month=$current_year
+    day=$yesterday
+    echo $day
+
+
+elif (($1 < $s))
+then 
+     echo "full_month"
+     year_month=$enter
+     day=""
+     
+     
+else
+     string="$1"
+     echo $string        	
+     day=""	
+     year_month="${string:0:6}"
+     		
+     day+="${string:0:4}"  
+     day+="_" 
+     day+="${string:4:2}"
+     day+="_"  
+     day+="${string:6:8}"
+     echo $day
+
+
+fi
+
+if [ -z "$(ls /home/polly_crew/scc_convert/input_pxt_tropos/)"] 
+then
+    echo "Empty"
+else
+    
+    echo "Not"
+    for file in /home/polly_crew/scc_convert/input_pxt_tropos/*; do rm $file; done
+fi
+
+
+
+for file in /pollyhome/pollyxt_tropos/data_zip/$year_month/$day*.nc.zip; do unzip $file -d /home/polly_crew/scc_convert/input_pxt_tropos/; echo $file; done
+
+/pollyhome/Bildermacher/miniconda3/bin/python3.6 New_converter_in_one_file_changed_02.06.20.py "import lidarconfig_TROPOS as ld"
+
+
+#cd /home/polly_crew/scc_access/
+
+/home/polly_crew/scc_access/do_all_depol_pxt_tropos
+
+#./do_all_depol_pxt_tropos
+/home/polly_crew/scc_access/do_all_pxt_tropos
+
+#./do_all_pxt_tropos
+
+cd /home/polly_crew/scc_convert/input_pxt_tropos/
+
+if [ -z "$(ls /home/polly_crew/scc_convert/input_pxt_tropos/)"] 
+then
+    echo "Empty"
+else
+    
+    echo "Not"
+    for file in /home/polly_crew/scc_convert/input_pxt_tropos/*; do rm $file; done
+fi
+
+
+
+#for file in /home/polly_crew/scc_access/depol_pxt_tropos/*; do cp $file  /home/polly_crew/scc_access/depol_pxt_tropos/uploaded/; done
+
+for file in /home/polly_crew/scc_access/depol_pxt_tropos/*.nc; do rm $file; done 
+
+#for file in /home/polly_crew/scc_access/pxt_tropos/*; do cp $file  /home/polly_crew/scc_access/pxt_tropos/uploaded/; done
+
+for file in /home/polly_crew/scc_access/pxt_tropos/*.nc; do rm $file; done 
+
+
+
+
+echo "Done"
+
+

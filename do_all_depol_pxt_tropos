@@ -1,0 +1,1 @@
+for file in /home/polly_crew/scc_access/depol_pxt_tropos/*.nc ; do /pollyhome/Bildermacher/miniconda3/bin/scc_access /home/polly_crew/scc_access/settings_depol_op.yaml $file 504 ;done
