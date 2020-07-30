@@ -1,0 +1,32 @@
+Short description of automatic upload of Pollydata to SCC
+
+The main script is
+•	pxt_tropos_bash
+This script is executed via crontab on our linux server
+#min    hour    day     month   dow     user    command
+ 35     0       *       *       * source /home/polly_crew/.bashrc; nice -n 15 /home/polly_crew/scc_convert/pxt_tropos_bash yesterday > /home/polly_crew/scc_convert/log_scc.log 2>&1
+Once per day at 0035 UTC
+
+This script 
+1.	unzips polly files (line 64)
+2.	Convert them to scc netcdf (line 66) based on the config file specified
+3.	then uploads first the depol calibration files (line 71)
+4.	And then the regular measurements. (line 74)
+5.	Deletes the converted files again afterwards
+
+The most important for Polly users is the config file for which you need to enter YOUR SCC settings.
+Example attached.
+The config examples in the repository  are for PollyXT TROPOS configuration 503 (before NRT) and 512 (NRT campaign).
+Besides the SCC settings, the most important setting in this config file is the
+
+FILE_DIVISION = 240  #how the file is divided, 720 = 6 hours, so 120 - one hour division
+
+Here you can enter, what time periods your SCC files should have. 1 profile with polly raw data is 30 sec, thus our standard of 240 profiles translates to 2 hour SCC files…..
+Basically that’s all.
+
+Important:
+I remember, that during the NRT I uploaded the files more frequently (every 2 hours or so).
+To do so, we allowed only files to be generated which consists of 240 single profiles. This means, if you had a 3 hour measurements, only the first 2 hours were converted. This was made, because once a measurement ID was submitted to the SCC, it was not allowed to submit it again with changed file size…..maybe we should consider allowing that, because this caused problems and data gaps. The reason for that was because our automatic depol calibration periods (10 mins in total, three times a day) were separated from the original 6 hours measurements file and thus only 5 hours and 50 minutes were left for the conversion of the regular file. Thus, usually only two 2-hour nectdf were generated out of the 6 hour Polly netcdf. 
+I changed this strict rule after the campaign to allow the upload of all data, but for the CAMS project we should discuss a better solution.
+So please provide your better ideas!
+
